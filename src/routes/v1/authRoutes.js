@@ -20,6 +20,4 @@ create_route({
   post_method: logout_user,
 });
 
-
-
 module.exports = router;

@@ -9,10 +9,10 @@ const login_user = async (req, res) => {
         abortEarly: false,
       });
 
-      const { error, message, data } = await login(req.body);
+      const { error, message, data,status } = await login(req.body);
       if (error) {
-        return res.status(400).json({
-          status: 400,
+        return res.status(status).json({
+          status: status,
           message: message,
           data,
         });

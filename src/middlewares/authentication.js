@@ -10,12 +10,10 @@ const authenticate = async (req, res, next) => {
     try {
       const decoded = verify_jwt_token({ data: token });
 
-      if (decoded?.data?.user?._id) {
+      if (decoded?.data?._id) {
         authorized = true;
-        const is_sssion = await get_session_by_user_id(
-          decoded?.data?.user?._id
-        );
-        if (!is_sssion) {
+        const is_session = await get_session_by_user_id(decoded?.data?._id);
+        if (!is_session) {
           return res.status(401).send({ message: status_code_list[401] });
         }
         req.user = decoded?.data;

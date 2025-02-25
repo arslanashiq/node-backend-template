@@ -2,14 +2,31 @@ const mongoose = require("mongoose");
 const timestamps = require("mongoose-timestamp");
 const _ = require("lodash");
 const userSchema = new mongoose.Schema({
-  email: {
+  phone_number: {
     type: String,
   },
-  password: {
+  user_name: {
+    type: String,
+    default: "",
+  },
+  login_password: {
+    type: String,
+    default: "",
+  },
+  withdrawl_passsword: {
     type: String,
     default: "",
   },
 
+  balance_amount: {
+    type: String,
+    default: "0",
+  },
+  remaining_tasks: {
+    type: Number,
+    default: 20,
+  },
+  last_task_assigned_date: { type: Date, default: Date.now }, // Auto-generated timestamp
 });
 
 userSchema.plugin(timestamps);
@@ -19,8 +36,10 @@ userSchema.methods.toJSON = function () {
   const userObject = user.toObject();
   const userJson = _.pick(userObject, [
     "_id",
-    "email",
-    "password",
+    "phone_number",
+    "user_name",
+    "login_password",
+    "withdrawl_password",
     "createdAt",
     "updatedAt",
   ]);

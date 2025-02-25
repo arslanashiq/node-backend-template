@@ -1,4 +1,4 @@
-const html=`
+const html = `
 
 <!DOCTYPE html>
 <html>
@@ -6,16 +6,10 @@ const html=`
 
 <h1>FYP</h1>
 
-<p>Group Name here</p>
-<ul>
-<li>Student 1</li>
-<li>Student 2</li>
-<li>Student 3</li>
-</ul>
+<p>Best Buy Online Backend Services</p>
 
 </body>
 </html>
-`
+`;
 
-
-module.exports=html
+module.exports = html;
