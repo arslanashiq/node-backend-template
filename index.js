@@ -24,12 +24,18 @@ const PORT = process.env.PORT;
 // connection MongoDB
 connectMongoDB(`${DB_URI}${DB_NAME}`);
 
-// Use main router
 app.use("/api", mainRoute);
-app.use("*", (req, res) => {
+
+app.get("/", (req, res) => {
   res.send(indexFile);
 });
 
+app.use("*", (req, res) => {
+  res.status(404).json({
+    code: 404,
+    message: "HTTP Method Not Found",
+  });
+});
 
 // listen app on Given Port
 app.listen(PORT, async () => {

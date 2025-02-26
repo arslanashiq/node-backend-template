@@ -4,9 +4,8 @@ const html = `
 <html>
 <body>
 
-<h1>FYP</h1>
+<h1 >Best Buy Online Backend Services</h1>
 
-<p>Best Buy Online Backend Services</p>
 
 </body>
 </html>
