@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const moment = require("moment");
 
 const { find_user_by_phone_number } = require("../DAL/user");
 const { create_jwt_token, verify_jwt_token } = require("../libs/jsonwebtoken");
@@ -33,8 +34,13 @@ const _login = async (body, resp) => {
     return resp;
   }
 
-  //   user to object and delete password
-  user.save();
+  const last_task_assigned_date = moment(user.last_task_assigned_date);
+  const toady_date = moment(new Date());
+  const interval = last_task_assigned_date.diff(toady_date, "days");
+  if (interval > 0) {
+    user.remaining_tasks = Math.floor(Math.random() * (30 - 20 + 1)) + 20;
+    user.save();
+  }
   user = user.toObject();
   delete user.login_password;
   delete user.withdrawl_passsword;
