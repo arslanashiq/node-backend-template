@@ -9,8 +9,6 @@ const detail_user = async (req, res) => {
           message: message,
         });
       }
-
-      console.log(data)
       res.status(200).json({
         code: 200,
         message: "User Detail",
