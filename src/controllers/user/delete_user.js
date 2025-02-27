@@ -3,7 +3,6 @@ const { deleteUser } = require("../../services/user");
 const delete_user = async (req, res) => {
   try {
     const { error, message, data } = await deleteUser(req.params);
-    console.log(error, message, data);
     if (error) {
       return res.status(400).json({
         success: false,
