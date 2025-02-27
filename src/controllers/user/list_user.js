@@ -2,7 +2,8 @@ const { listUser } = require("../../services/user");
 
 const list_user = async (req, res) => {
   try {
-    const { error, message, data } = await listUser(req.params);
+    const { error, message, data } = await listUser(req.query);
+
     if (error) {
       return res.status(400).json({
         success: false,

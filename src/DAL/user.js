@@ -20,7 +20,7 @@ const find_and_delete_user_by_id = async (id) => {
 const find_user_by_email = async (email) => {
   return await User.findOne({ email });
 };
-const find_all_users = async () => {
+const find_all_users = async (query) => {
   let { page, limit } = query;
 
   // Default values

@@ -3,13 +3,14 @@ const { deleteUser } = require("../../services/user");
 const delete_user = async (req, res) => {
   try {
     const { error, message, data } = await deleteUser(req.params);
+    console.log(error, message, data);
     if (error) {
       return res.status(400).json({
         success: false,
         message: message,
       });
     }
-    res.status(204).json({
+    return res.status(200).json({
       success: true,
       message: "User Deleted",
       data,

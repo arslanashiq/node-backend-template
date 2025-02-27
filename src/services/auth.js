@@ -4,25 +4,22 @@ const { find_user_by_email } = require("../DAL/user");
 const { create_jwt_token, verify_jwt_token } = require("../libs/jsonwebtoken");
 const {
   add_to_session,
-  delete_from_session_by_user_id,
+  find_session_by_token_and_delete,
 } = require("../DAL/session");
 
 //********************************************{login user}********************************************************/
 const _login = async (body, resp) => {
-  let user = await find_user_by_email(body.phone_number);
+  let user = await find_user_by_email(body.email);
 
   if (!user) {
     resp.error = true;
-    resp.message = "Invalid Phone Number";
+    resp.message = "Invalid Email";
     return resp;
   }
 
   //   check password
 
-  const isValidPassword = await bcrypt.compare(
-    body.password,
-    user.password
-  );
+  const isValidPassword = await bcrypt.compare(body.password, user.password);
   if (!isValidPassword) {
     resp.error = true;
     resp.message = "Invalid Password";
@@ -52,9 +49,9 @@ const login = async (body) => {
 const _logout = async (token, resp) => {
   const decoded = verify_jwt_token({ data: token });
   if (decoded?.data?._id) {
-    let session = await delete_from_session_by_user_id(decoded?.data?._id);
+    let session = await find_session_by_token_and_delete(token);
 
-    if (session?.acknowledged) {
+    if (session) {
       resp.message = "Successfully Logout";
       return resp;
     }

@@ -2,7 +2,11 @@ const catch_validation_errors = (res, err) => {
   if (err.name === "ValidationError") {
     let errors = {};
     err.inner.map((e) => {
-      errors[e.path] = e.errors[0];
+      if (e.type === "noUnknown") {
+        errors["keys"] = e.errors[0];
+      } else {
+        errors[e.path] = e.errors[0];
+      }
     });
     return res.status(400).json({
       success: false,

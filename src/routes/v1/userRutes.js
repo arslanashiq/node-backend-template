@@ -24,18 +24,21 @@ create_route({
   auth_enable: true,
   get_method: detail_user,
 });
+
 create_route({
   router,
   route: "/:id",
   auth_enable: true,
   put_method: update_user,
 });
+
 create_route({
   router,
   route: "/",
   auth_enable: true,
   get_method: list_user,
 });
+
 create_route({
   router,
   route: "/:id",

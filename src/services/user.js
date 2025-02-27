@@ -1,9 +1,15 @@
+const bcrypt = require("bcrypt");
+
 const {
   add_user,
   find_user_by_email,
   find_and_delete_user_by_id,
   find_user_by_id_and_update,
+  find_user_by_id,
+  find_all_users,
+  find_users_count,
 } = require("../DAL/user");
+
 
 //********************************************{Add User}********************************************************/
 const _addUser = async (body, resp) => {
@@ -79,7 +85,7 @@ const updateUser = async (params, body) => {
 };
 //********************************************{Update User Password}********************************************************/
 const _updateUserPassword = async (body, resp) => {
-  let user = await find_user_by_email(params.id || "");
+  let user = await find_user_by_email(body.email);
 
   if (!user) {
     resp.error = true;
@@ -110,29 +116,34 @@ const updateUserPassword = async (body) => {
 };
 
 //********************************************{List User}********************************************************/
-const _listUser = async (params, resp) => {
-  let data = await find_user_by_id(params.id || "");
+const _listUser = async (query, resp) => {
+  let data = await find_all_users(query);
+  let count = await find_users_count(query);
   if (!data) {
     resp.error = true;
     resp.message = "User Not Found";
     return resp;
   }
-  resp.data = data.toObject();
+  resp.data = {
+    data,
+    count,
+  };
   return resp;
 };
-const listUser = async (params) => {
+const listUser = async (query) => {
   let resp = {
     error: false,
     message: "",
     data: {},
   };
-  resp = await _listUser(params, resp);
+  resp = await _listUser(query, resp);
   return resp;
 };
 
 //********************************************{List User}********************************************************/
 const _deleteUser = async (params, resp) => {
   let data = await find_and_delete_user_by_id(params.id || "");
+
   if (!data) {
     resp.error = true;
     resp.message = "User Not Found";
