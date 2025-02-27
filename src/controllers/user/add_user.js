@@ -11,16 +11,16 @@ const add_user = async (req, res) => {
         abortEarly: false,
       });
 
-      const { error, message, data, status } = await addUser(req.body);
+      const { error, message, data } = await addUser(req.body);
       if (error) {
-        return res.status(status || 400).json({
-          status: status || 400,
+        return res.status(400).json({
+          success:false,
           message: message,
         });
       }
 
       res.status(201).json({
-        code: 201,
+        success: true,
         message: "User Added Successfully",
         data,
       });
@@ -28,7 +28,7 @@ const add_user = async (req, res) => {
       catch_validation_errors(res, err);
     }
   } catch (error) {
-    res.status(400).send({ status: 400, message: error.message });
+    res.status(400).send({ success:false, message: error.message });
   }
 };
 

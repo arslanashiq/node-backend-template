@@ -1,15 +1,15 @@
 const {
-  find_user_by_phone_number,
   add_user,
-  find_user_by_id,
+  find_user_by_email,
+  find_and_delete_user_by_id,
+  find_user_by_id_and_update,
 } = require("../DAL/user");
 
 //********************************************{Add User}********************************************************/
 const _addUser = async (body, resp) => {
-  let user = await find_user_by_phone_number(body.phone_number);
+  let user = await find_user_by_email(body.email);
   if (user) {
     resp.error = true;
-    resp.status = 409;
     resp.message = "User Alreay Exist";
     return resp;
   }
@@ -17,13 +17,11 @@ const _addUser = async (body, resp) => {
   user = await add_user(body);
   if (!user) {
     resp.error = true;
-    resp.status = 400;
     resp.message = "Something Went Wrong";
     return resp;
   }
   user = user.toObject();
-  delete user.withdrawl_passsword;
-  delete user.login_password;
+  delete user.password;
   resp.data = user;
   return resp;
 };
@@ -32,7 +30,6 @@ const addUser = async (body) => {
     error: false,
     message: "",
     data: {},
-    status: 201,
   };
 
   resp = await _addUser(body, resp);
@@ -44,7 +41,6 @@ const _detailUser = async (params, resp) => {
   let data = await find_user_by_id(params.id || "");
   if (!data) {
     resp.error = true;
-    resp.status = 404;
     resp.message = "User Not Found";
     return resp;
   }
@@ -55,92 +51,111 @@ const detailUser = async (params) => {
   let resp = {
     error: false,
     message: "",
-    status: 200,
     data: {},
   };
   resp = await _detailUser(params, resp);
   return resp;
 };
 
-//********************************************{Update User Task Count}********************************************************/
-const _updateRemainingTaskCount = async (params, resp) => {
-  let data = await find_user_by_id(params.id || "");
+//********************************************{Update User}********************************************************/
+const _updateUser = async (params, body, resp) => {
+  let data = await find_user_by_id_and_update(params.id || "", body);
   if (!data) {
     resp.error = true;
-    resp.status = 404;
     resp.message = "User Not Found";
     return resp;
   }
-  data.remaining_tasks = data.remaining_tasks - 1;
-  await data.save();
   resp.data = data.toObject();
   return resp;
 };
-const updateRemainingTaskCount = async (params) => {
+const updateUser = async (params, body) => {
   let resp = {
     error: false,
     message: "",
-    status: 200,
     data: {},
   };
-  resp = await _updateRemainingTaskCount(params, resp);
+  resp = await _updateUser(params, body, resp);
+  return resp;
+};
+//********************************************{Update User Password}********************************************************/
+const _updateUserPassword = async (body, resp) => {
+  let user = await find_user_by_email(params.id || "");
+
+  if (!user) {
+    resp.error = true;
+    resp.message = "User Not Found";
+    return resp;
+  }
+  const isValidPassword = await bcrypt.compare(body.password, user.password);
+  if (!isValidPassword) {
+    resp.error = true;
+    resp.message = "Password not match";
+    return resp;
+  }
+  const salt = await bcrypt.genSalt(10);
+  const newPasswordHash = await bcrypt.hash(body.new_password, salt);
+  user.password = newPasswordHash;
+  await user.save();
+  resp.data = {};
+  return resp;
+};
+const updateUserPassword = async (body) => {
+  let resp = {
+    error: false,
+    message: "",
+    data: {},
+  };
+  resp = await _updateUserPassword(body, resp);
   return resp;
 };
 
-//********************************************{Update Task Asign Date}********************************************************/
-const _updateTaskAsignDate = async (params, resp) => {
+//********************************************{List User}********************************************************/
+const _listUser = async (params, resp) => {
   let data = await find_user_by_id(params.id || "");
   if (!data) {
     resp.error = true;
-    resp.status = 404;
     resp.message = "User Not Found";
     return resp;
   }
-  data.last_task_assigned_date = Date.now();
-  await data.save();
   resp.data = data.toObject();
   return resp;
 };
-const updateTaskAsignDate = async (params) => {
+const listUser = async (params) => {
   let resp = {
     error: false,
     message: "",
-    status: 200,
     data: {},
   };
-  resp = await _updateTaskAsignDate(params, resp);
+  resp = await _listUser(params, resp);
   return resp;
 };
 
-//********************************************{Update Balance}********************************************************/
-const _updateBalance = async (params, body, resp) => {
-  let data = await find_user_by_id(params.id || "");
+//********************************************{List User}********************************************************/
+const _deleteUser = async (params, resp) => {
+  let data = await find_and_delete_user_by_id(params.id || "");
   if (!data) {
     resp.error = true;
-    resp.status = 404;
     resp.message = "User Not Found";
     return resp;
   }
-  data.balance_amount = body.balance_amount;
-  await data.save();
-  resp.data = data.toObject();
+  resp.data = {};
   return resp;
 };
-const updateBalance = async (params, body) => {
+const deleteUser = async (params) => {
   let resp = {
     error: false,
     message: "",
-    status: 200,
     data: {},
   };
-  resp = await _updateBalance(params, body, resp);
+  resp = await _deleteUser(params, resp);
   return resp;
 };
 
 module.exports = {
   addUser,
   detailUser,
-  updateRemainingTaskCount,
-  updateTaskAsignDate,
-  updateBalance,
+  updateUser,
+  listUser,
+  deleteUser,
+  updateUserPassword,
 };

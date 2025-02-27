@@ -7,14 +7,14 @@ const logout_user = async (req, res) => {
       const { error, message, data } = await logout(req.header("x-sh-auth"));
       if (error) {
         return res.status(400).json({
-          status: 400,
+          success: false,
           message: message,
           data
         });
       }
 
       res.status(200).json({
-        code: 200,
+        success: true,
         message: "Successfully Logged Out",
         ...data,
       });
@@ -22,7 +22,7 @@ const logout_user = async (req, res) => {
       catch_validation_errors(res, err);
     }
   } catch (error) {
-    res.status(400).send({status:400,message:error.message});
+    res.status(400).send({success:false,message:error.message});
   }
 };
 

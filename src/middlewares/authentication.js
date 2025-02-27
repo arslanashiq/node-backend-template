@@ -14,15 +14,15 @@ const authenticate = async (req, res, next) => {
         authorized = true;
         const is_session = await get_session_by_user_id(decoded?.data?._id);
         if (!is_session) {
-          return res.status(401).send({ message: status_code_list[401] });
+          return res.status(401).send(status_code_list[401]);
         }
         req.user = decoded?.data;
         next();
       } else {
-        res.status(401).json({ message: status_code_list[401] });
+        res.status(401).json(status_code_list[401]);
       }
     } catch (error) {
-      res.status(400).send({ status: 400, message: error.message });
+      res.status(400).send({ success: false, message: error.message });
     }
   }
 };

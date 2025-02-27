@@ -5,7 +5,6 @@ const indexFile = require("./src/utilities/html/index.js");
 
 const mainRoute = require("./src/routes");
 const connectMongoDB = require("./src/libs/mongoose");
-const statusCode = require("./src/utilities/status_code");
 
 const app = express();
 app.use(express.json());
@@ -32,7 +31,7 @@ app.get("/", (req, res) => {
 
 app.use("*", (req, res) => {
   res.status(404).json({
-    code: 404,
+    success: false,
     message: "HTTP Method Not Found",
   });
 });

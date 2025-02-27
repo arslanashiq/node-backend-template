@@ -1,7 +1,7 @@
 {
-  "name": "server-2",
+  "name": "node-backend-template",
   "version": "1.0.0",
-  "description": "server-2",
+  "description": "node-backend-template",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",

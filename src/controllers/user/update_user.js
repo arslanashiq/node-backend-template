@@ -1,26 +1,26 @@
-const { login } = require("../../services/auth");
+const { updateUser } = require("../../services/user");
 const catch_validation_errors = require("../../utilities/catch_validation_errors");
-const { login_validation_schema } = require("../../utilities/validation/auth");
+const {
+  update_user_validation_schema,
+} = require("../../utilities/validation/user");
 
-const login_user = async (req, res) => {
+const update_user = async (req, res) => {
   try {
     try {
-      await login_validation_schema.validate(req.body, {
+      await update_user_validation_schema.validate(req.body, {
         abortEarly: false,
       });
 
-      const { error, message, data, status } = await login(req.body);
+      const { error, message, data } = await updateUser(req.params, req.body);
       if (error) {
-        return res.status(status).json({
+        return res.status(400).json({
           success: false,
           message: message,
-          data,
         });
       }
-
       res.status(200).json({
         success: true,
-        message: "Successfully Logged In",
+        message: "User Updated",
         data,
       });
     } catch (err) {
@@ -31,4 +31,4 @@ const login_user = async (req, res) => {
   }
 };
 
-module.exports = login_user;
+module.exports = update_user;

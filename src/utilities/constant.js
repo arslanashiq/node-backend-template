@@ -1,0 +1,3 @@
+const DEFAULT_PAGE_SIZE_LIMIT = 20;
+
+module.exports = { DEFAULT_PAGE_SIZE_LIMIT };

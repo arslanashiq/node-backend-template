@@ -5,18 +5,18 @@ const detail_user = async (req, res) => {
       const { error, message, data } = await detailUser(req.params);
       if (error) {
         return res.status(400).json({
-          status: 400,
+          success: false,
           message: message,
         });
       }
       res.status(200).json({
-        code: 200,
+        success: true,
         message: "User Detail",
         data
       });
     
   } catch (error) {
-    res.status(400).send({status:400,message:error.message});
+    res.status(400).send({success:false,message:error.message});
   }
 };
 
